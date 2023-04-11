@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+
+	<select id="boardList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select board_id,b_title,member_id,postdate,visitcount,b_type from board where 1=1 
+		]]>
+		<if test="select == 'b_title'">
+			and b_title like CONCAT('%',#{search},'%')
+		</if>
+		
+		<if test="select == 'b_content'">
+			and b_content like CONCAT('%',#{search},'%')
+		</if>
+		
+		
+		<choose>
+			<when test="b_type==1">
+				<![CDATA[and b_type='국내']]>
+			</when>
+			
+			<when test="b_type==2">
+				<![CDATA[and b_type='해외']]>
+			</when>
+			
+			<when test="b_type==3">
+				<![CDATA[and b_type='질문']]>
+			</when>
+			
+			<when test="b_type==4">
+				<![CDATA[and b_type='자유']]>
+			</when>
+		</choose>
+		
+		<![CDATA[
+			order by board_id desc 
+			
+		]]>
+		
+		
+			limit ${start},${end}
+	</select>
+	
+	<select id="getComment" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select board_id,member_id,b_reply,postdate,reply_num from boardReply where board_id = #{board_id} order by reply_num desc;
+		]]>
+	</select>
+	
+	<select id="boardView" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select*from board 
+		]]>
+		
+		<if test="board_id != null">
+			where board_id=#{board_id}		
+		</if>
+		
+		<if test="board_id == null">
+			order by board_id desc limit 1
+		</if>
+	</select>
+	
+	
+	<select id="boardImgSelect" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select * from boardImg where board_id = #{board_id}	
+		]]>
+		
+	</select>
+	
+	<select id="boardCnt" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			select count(board_id) as cnt from board where 1=1
+			
+		]]>
+		
+			<if test="select == 'b_title'">
+				and b_title like CONCAT('%',#{search},'%')
+			</if>
+		
+			<if test="select == 'b_content'">
+				and b_content like CONCAT('%',#{search},'%')
+			</if>
+		
+			<if test="select == 'member_id'">
+				and member_id like CONCAT('%',#{search},'%')
+			</if>
+			
+			<choose>
+			<when test="b_type==1">
+				<![CDATA[and b_type='국내']]>
+			</when>
+			
+			<when test="b_type==2">
+				<![CDATA[and b_type='해외']]>
+			</when>
+			
+			<when test="b_type==3">
+				<![CDATA[and b_type='질문']]>
+			</when>
+			
+			<when test="b_type==4">
+				<![CDATA[and b_type='자유']]>
+			</when>
+			
+		</choose>
+	</select>
+	
+	
+	<select id="boardReplyCnt" parameterType="hashmap"  resultType="hashmap">
+		<![CDATA[
+			select count(reply_num) as cnt from boardreply where board_id=#{board_id}  
+		]]>
+	</select>
+	
+	
+	
+	
+	
+	<insert id="boardInsert" parameterType="hashmap">
+		<![CDATA[
+			insert into board (b_title,b_content,b_type,member_id)
+			values(#{b_title},#{b_content},#{b_type},#{member_id})
+		]]>
+	</insert>
+	
+	
+	<insert id="boardImgInsert" parameterType="hashmap">
+		<![CDATA[
+			insert into boardImg (board_id,boardImg)
+			values(#{board_id},#{boardImg})
+		]]>
+	</insert>
+	
+	<insert id="replyInsert" parameterType="hashmap">
+		<![CDATA[
+			insert into boardReply(board_id,member_id,b_reply)
+			values(#{board_id},#{member_id},#{b_reply})
+		]]>
+				
+	</insert>
+	
+	
+	
+	<update id="updateBoard" parameterType="hashmap">
+		<![CDATA[
+			update board set b_title=#{b_title},b_content=#{b_content}
+			where board_id=#{board_id}
+		]]>
+	</update>
+	
+	<update id="boardVisit" parameterType="hashmap">
+		<![CDATA[
+			update board set visitcount=visitcount+1 where board_id=#{board_id}
+		]]>
+	</update>
+	
+	<update id="replyUpdate">
+		<![CDATA[
+			update boardreply set b_reply=#{b_reply} where reply_num=#{reply_num}
+		]]>
+	</update>
+	
+	
+	
+	
+	<delete id="deleteBoard">
+		<![CDATA[
+			delete from board where board_id=#{board_id}
+		]]>
+	</delete>
+	
+	<delete id="replyDelete">
+		<![CDATA[
+			delete from boardreply where reply_num=#{reply_num}
+		]]>
+	</delete>
+	
+	<delete id="deleteBoardImg">
+		<![CDATA[
+			delete from boardImg where boardImg_num=#{boardImg_num} 
+		]]>
+	</delete>
+	
+	
+	
+	
+</mapper>
+

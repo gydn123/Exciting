@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="loginMapper">
+
+<select id="insertMember" parameterType="memberDTO">
+	<![CDATA[
+	INSERT MEMBER(member_id,m_name,m_birth,m_pass,m_email,m_address,m_gender,m_phone)
+	VALUE (#{member_id},#{m_name},#{m_birth},#{m_pass},#{m_email},#{m_address},#{m_gender},#{m_phone});
+	]]>
+</select>
+
+<select id="idCheck" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+		SELECT count(*) FROM MEMBER WHERE member_id = #{member_id};
+	]]>
+</select>
+
+<select id="loginCheck" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+		SELECT count(*) FROM MEMBER WHERE member_id = #{member_id} and m_pass = #{m_pass};
+	]]>
+</select>
+
+<select id="deleteMember" parameterType="memberDTO" resultType="int">
+	<![CDATA[
+		delete from member where member_id = #{member_id};
+	]]>
+</select>
+
+
+</mapper>

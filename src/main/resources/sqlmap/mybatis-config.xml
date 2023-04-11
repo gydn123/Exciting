@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<typeAliases>
+		<typeAlias type="com.exciting.dto.OrderDTO" alias="orderDTO" />
+		<typeAlias type="com.exciting.dto.AimageDTO" alias="aimageDTO" />
+		<typeAlias type="com.exciting.dto.AmusementDTO"
+			alias="amusementDTO" />
+		<typeAlias type="com.exciting.dto.AmusementAimageDTO"
+			alias="amusementAimageDTO" />
+		<typeAlias type="com.exciting.dto.PromotionDTO"
+			alias="promotionDTO" />
+		<typeAlias type="com.exciting.dto.SelectedDTO"
+			alias="selectedDTO" />
+		<typeAlias type="com.exciting.dto.MemberDTO"
+			alias="memberDTO" />
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="/sqlmap/mapper/boardMapper.xml" />
+		<mapper resource="/sqlmap/mapper/amusement-mapper.xml" />
+		<mapper resource="/sqlmap/mapper/PromotionMapper.xml" />
+		<mapper resource="/sqlmap/mapper/selected-mapper.xml" />
+		<mapper resource="/sqlmap/mapper/LoginMapper.xml" />
+	</mappers>
+
+</configuration>

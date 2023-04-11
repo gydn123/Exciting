@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="promotion">
+
+	<select id="select_promotion" resultType="promotionDTO">
+		<![CDATA[
+		select promotion_id,promotion_content, promotion_name, promotion_img
+		from promotion
+		]]>
+	</select>
+
+	<select id="select_proprice" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+		SELECT * FROM promotion p
+		JOIN amusement a ON a.amuse_id = p.amuse_id
+		JOIN ticket t ON p.ticket_id = t.ticket_id
+		WHERE p.promotion_id=#{promotion_id}
+		]]>
+	</select>
+
+	<insert id="insert_order" parameterType="orderDTO"
+		useGeneratedKeys="true" keyProperty="order_id">
+	<![CDATA[
+		insert into orders(member_id, promotion_id)
+		values(#{member_id},#{promotion_id});
+	]]>
+	</insert>
+
+	<select id="select_orders" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+		select * from promotion p
+		join amusement a on a.amuse_id = p.amuse_id
+		join ticket t on p.ticket_id = t.ticket_id
+		join orders o on o.promotion_id = p.promotion_id
+		join member m on m.member_id = o.member_id 
+		WHERE o.order_id=#{orderid}
+		]]>
+	</select>
+
+	<select id="select_order_id" resultType="orderDTO">
+		SELECT order_id
+		FROM
+		orders
+		WHERE member_id = #{member_id}
+		AND promotion_id = #{promotion_id}
+		ORDER BY order_id DESC
+		LIMIT 1;
+	</select>
+
+	<delete id="deleteorder_id" parameterType="int">
+		<![CDATA[
+		DELETE FROM orders WHERE order_id = #{order_id}
+		]]>
+	</delete>
+	
+	<delete id="delete_orders" parameterType="java.util.List">
+			
+		DELETE FROM ORDERS  WHERE order_id IN
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item.order_id}
+    </foreach>
+	
+	</delete>
+	
+	<delete id="delete_one" parameterType="orderDTO">
+		DELETE FROM ORDERS  WHERE order_id= #{order_id}
+	</delete>
+
+
+
+</mapper>
